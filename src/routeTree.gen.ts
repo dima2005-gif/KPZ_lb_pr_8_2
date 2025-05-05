@@ -12,11 +12,29 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as EntitiesIndexImport } from './routes/entities/index'
+import { Route as EntitiesNewImport } from './routes/entities/new'
+import { Route as EntitiesIdImport } from './routes/entities/$id'
 
 // Create/Update Routes
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EntitiesIndexRoute = EntitiesIndexImport.update({
+  path: '/entities/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EntitiesNewRoute = EntitiesNewImport.update({
+  path: '/entities/new',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EntitiesIdRoute = EntitiesIdImport.update({
+  path: '/entities/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -31,12 +49,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/entities/$id': {
+      id: '/entities/$id'
+      path: '/entities/$id'
+      fullPath: '/entities/$id'
+      preLoaderRoute: typeof EntitiesIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/entities/new': {
+      id: '/entities/new'
+      path: '/entities/new'
+      fullPath: '/entities/new'
+      preLoaderRoute: typeof EntitiesNewImport
+      parentRoute: typeof rootRoute
+    }
+    '/entities/': {
+      id: '/entities/'
+      path: '/entities'
+      fullPath: '/entities'
+      preLoaderRoute: typeof EntitiesIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({ IndexRoute })
+export const routeTree = rootRoute.addChildren({
+  IndexRoute,
+  EntitiesIdRoute,
+  EntitiesNewRoute,
+  EntitiesIndexRoute,
+})
 
 /* prettier-ignore-end */
 
@@ -46,11 +90,23 @@ export const routeTree = rootRoute.addChildren({ IndexRoute })
     "__root__": {
       "filePath": "__root.ts",
       "children": [
-        "/"
+        "/",
+        "/entities/$id",
+        "/entities/new",
+        "/entities/"
       ]
     },
     "/": {
       "filePath": "index.ts"
+    },
+    "/entities/$id": {
+      "filePath": "entities/$id.ts"
+    },
+    "/entities/new": {
+      "filePath": "entities/new.ts"
+    },
+    "/entities/": {
+      "filePath": "entities/index.ts"
     }
   }
 }
