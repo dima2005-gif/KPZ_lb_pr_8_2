@@ -125,3 +125,4 @@ export const deleteEntity = async (id: number): Promise<void> => {
     console.error(`Ошибка при удалении сущности с id ${id}:`, error);
   }
 };
+
