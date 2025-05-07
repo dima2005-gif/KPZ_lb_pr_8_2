@@ -4,38 +4,28 @@ import api from "../api";
 let entities: Array<Entity> = [
   { 
     id: 1, 
-    name: 'Jotaro Kujo', 
-    description: 'Stand: Star Platinum. Один з найпотужніших Stand\'ів, який володіє величезною силою та швидкістю. Може зупиняти час, має високу точність та силу в бою.', 
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    title: 'Jotaro Kujo', 
+    content: 'Stand: Star Platinum. Один з найпотужніших Stand\'ів, який володіє величезною силою та швидкістю. Може зупиняти час, має високу точність та силу в бою.'
   },
   { 
     id: 2, 
-    name: 'Joseph Joestar', 
-    description: 'Stand: Hermit Purple. Використовує лозини для захоплення об\'єктів та отримання передбачень через карти Таро. Відзначається високою маневреністю та унікальними здібностями.', 
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    title: 'Joseph Joestar', 
+    content: 'Stand: Hermit Purple. Використовує лозини для захоплення об\'єктів та отримання передбачень через карти Таро. Відзначається високою маневреністю та унікальними здібностями.'
   },
   { 
     id: 3, 
-    name: 'Muhammad Avdol', 
-    description: 'Stand: Magician\'s Red. Вогонь! Цей Stand дозволяє керувати вогнем та створювати полум\'я для атаки, що робить Авдола потужним і небезпечним супротивником у бою.', 
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    title: 'Muhammad Avdol', 
+    content: 'Stand: Magician\'s Red. Вогонь! Цей Stand дозволяє керувати вогнем та створювати полум\'я для атаки, що робить Авдола потужним і небезпечним супротивником у бою.'
   },
   { 
     id: 4, 
-    name: 'Jean Pierre Polnareff', 
-    description: 'Stand: Silver Chariot. Stand у вигляді лицаря з мечем, що володіє блискавичними атаками та високою швидкістю. Полнареф використовує його для швидкої та точної боротьби.', 
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    title: 'Jean Pierre Polnareff', 
+    content: 'Stand: Silver Chariot. Stand у вигляді лицаря з мечем, що володіє блискавичними атаками та високою швидкістю. Полнареф використовує його для швидкої та точної боротьби.'
   },
   { 
     id: 5, 
-    name: 'Kakyoin Noriaki', 
-    description: 'Stand: Hierophant Green. Керує довгими кінцівками для атак на відстані та високої точності. Мощний в обороні та атаці на дальні дистанції.', 
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    title: 'Kakyoin Noriaki', 
+    content: 'Stand: Hierophant Green. Керує довгими кінцівками для атак на відстані та високої точності. Мощний в обороні та атаці на дальні дистанції.', 
   }
 ];
 
@@ -56,10 +46,9 @@ export const getAllEntities = async (): Promise<Array<Entity>> => {
 
     return response.data.data.map((item) => ({
       id: item.id,
-      name: item.title, // Преобразуем `title` в `name`
-      description: item.content, // Преобразуем `content` в `description`
-      createdAt: item.createdAt || new Date().toISOString(), // Преобразуем `created_at` в `createdAt`
-      updatedAt: item.updatedAt || new Date().toISOString(), // Преобразуем `updated_at` в `updatedAt`
+      title: item.title, // Преобразуем `title` в `name`
+      content: item.content, // Преобразуем `content` в `description`
+      
     }));
   } catch (error) {
     console.error('Ошибка при получении данных:', error);
@@ -75,10 +64,9 @@ export const getEntityById = async (id: number): Promise<Entity | undefined> => 
 
     return {
       id: response.data.data.id,
-      name: response.data.data.title,
-      description: response.data.data.content,
-      createdAt: response.data.data.createdAt,
-      updatedAt: response.data.data.updatedAt,
+      title: response.data.data.title,
+      content: response.data.data.content,
+    
     };
   } catch (error) {
     console.error(`Ошибка при получении сущности с id ${id}:`, error);
@@ -90,19 +78,15 @@ export const getEntityById = async (id: number): Promise<Entity | undefined> => 
 export const createEntity = async (entity: Partial<Entity>): Promise<Entity | undefined> => {
   try {
     const response = await api.post<ApiResponse<Entity>>('/posts', {
-      title: entity.name,
-      content: entity.description,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      title: entity.title,
+      content: entity.content,
     });
 
     console.log('Созданная сущность:', response.data);
     return {
       id: response.data.data.id,
-      name: response.data.data.title,
-      description: response.data.data.content,
-      createdAt: response.data.data.createdAt,
-      updatedAt: response.data.data.updatedAt,
+      title: response.data.data.title,
+      content: response.data.data.content,
     };
   } catch (error) {
     console.error('Ошибка при создании сущности:', error);
@@ -114,18 +98,17 @@ export const createEntity = async (entity: Partial<Entity>): Promise<Entity | un
 export const updateEntity = async (id: number, data: Partial<Entity>): Promise<Entity | undefined> => {
   try {
     const response = await api.put<ApiResponse<Entity>>(`/posts/${id}`, {
-      title: data.name,
-      content: data.description,
+      title: data.title,
+      content: data.content,
       updatedAt: new Date().toISOString(),
     });
 
     console.log('Обновленная сущность:', response.data);
     return {
       id: response.data.data.id,
-      name: response.data.data.title,
-      description: response.data.data.content,
-      createdAt: response.data.data.createdAt,
-      updatedAt: response.data.data.updatedAt,
+      title: response.data.data.title,
+      content: response.data.data.content,
+
     };
   } catch (error) {
     console.error(`Ошибка при обновлении сущности с id ${id}:`, error);
