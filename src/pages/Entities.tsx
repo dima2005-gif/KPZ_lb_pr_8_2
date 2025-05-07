@@ -11,20 +11,21 @@ export default function Entities(): JSX.Element {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedEntityId, setSelectedEntityId] = useState<number | null>(null);
 
+  // Загружаем сущности при монтировании компонента
   useEffect(() => {
     const fetchEntities = async (): Promise<void> => {
-      const entities = await getAllEntities();
-      console.log('Сущности:', entities);
-      setEntities(entities);
+      try {
+        const entities = await getAllEntities();
+        setEntities(entities);
+      } catch (error) {
+        console.error("Ошибка при загрузке сущностей:", error);
+      }
     };
 
     void fetchEntities();
   }, []);
 
-  const navigateToCreateEntityPage = (): Promise<void> => {
-    return navigate({ to: "/entities/new" });
-  };
-
+  // Удаление сущности
   const handleDeleteClick = (id: number): void => {
     setSelectedEntityId(id);
     setShowModal(true);
@@ -32,42 +33,52 @@ export default function Entities(): JSX.Element {
 
   const confirmDelete = async (): Promise<void> => {
     if (selectedEntityId !== null) {
-      deleteEntity(selectedEntityId);
-      const updatedEntities = await getAllEntities();
-      setEntities(updatedEntities);
-      setShowModal(false);
+      try {
+        await deleteEntity(selectedEntityId);
+        setEntities((prevEntities) =>
+          prevEntities.filter((entity) => entity.id !== selectedEntityId)
+        );
+        setShowModal(false);
+        alert("Сутність успішно видалена!");
+      } catch (error) {
+        console.error("Ошибка при удалении сущности:", error);
+      }
     }
   };
 
-  const handleEdit = (entity: Entity): void => {
-    const updatedName = prompt("Введіть нову назву:", entity.name);
-    if (updatedName === null || updatedName.trim().length < 3) {
+  // Редактирование сущности
+  const handleEdit = async (entity: Entity): Promise<void> => {
+    const updatedTitle = prompt("Введіть нову назву:", entity.title);
+    if (updatedTitle === null || updatedTitle.trim().length < 3) {
       alert("Назва повинна містити щонайменше 3 символи.");
       return;
     }
 
-    const updatedDescription = prompt("Введіть новий опис:", entity.description);
-    if (updatedDescription === null || updatedDescription.trim().length < 10) {
+    const updatedContent = prompt("Введіть новий опис:", entity.content);
+    if (updatedContent === null || updatedContent.trim().length < 10) {
       alert("Опис повинен містити щонайменше 10 символів.");
       return;
     }
 
     const updatedEntity = {
       ...entity,
-      name: updatedName.trim(),
-      description: updatedDescription.trim(),
-      updatedAt: new Date().toISOString(),
+      title: updatedTitle.trim(),
+      content: updatedContent.trim(),
     };
 
-    updateEntity(entity.id, updatedEntity);
-
-    setEntities((previousEntities) =>
-      previousEntities.map((currentEntity) =>
-        currentEntity.id === entity.id ? updatedEntity : currentEntity
-      )
-    );
-
-    alert("Сутність успішно оновлена!");
+    try {
+      const result = await updateEntity(entity.id, updatedEntity);
+      if (result) {
+        setEntities((prevEntities) =>
+          prevEntities.map((currentEntity) =>
+            currentEntity.id === entity.id ? result : currentEntity
+          )
+        );
+        alert("Сутність успішно оновлена!");
+      }
+    } catch (error) {
+      console.error("Ошибка при обновлении сущности:", error);
+    }
   };
 
   return (
@@ -78,21 +89,16 @@ export default function Entities(): JSX.Element {
           <li key={entity.id}>
             <EntityCard
               entity={entity}
-              onClick={() => {
-                handleDeleteClick(entity.id);
-              }}
-              onEdit={() => {
-                handleEdit(entity);
-              }}
+              onEdit={() => void handleEdit(entity)}
+              onDetails={() => void navigate({ to: `/entities/${entity.id}` })}
+              onDelete={() => void handleDeleteClick(entity.id)}
             />
           </li>
         ))}
       </ul>
       <button
         className="bg-blue-600 text-white px-5 py-3 rounded-3xl mx-auto my-5 block font-bold text-2xl"
-        onClick={() => {
-          void navigateToCreateEntityPage();
-        }}
+        onClick={() => navigate({ to: "/entities/new" })}
       >
         Створити новий екземпляр
       </button>
@@ -100,12 +106,8 @@ export default function Entities(): JSX.Element {
         bodyMessage="Ви впевнені, що хочете видалити цей елемент?"
         headerMessage="Підтвердження видалення"
         show={showModal}
-        onCancel={() => {
-          setShowModal(false);
-        }}
-        onConfirm={() => {
-          void confirmDelete();
-        }}
+        onCancel={() => setShowModal(false)}
+        onConfirm={() => void confirmDelete()}
       />
     </>
   );
