@@ -1,12 +1,13 @@
 import { useLoaderData } from "@tanstack/react-router";
-import type { Entity } from "../types/Entity";
+import { Route } from "../routes/entities/$id"; // Import the route definition
 
 export default function EntityDetails(): JSX.Element {
-  const entity = useLoaderData<Entity>({ from: "/entities/$id" });
-
-  // Отладочная информация
+  // Use the correct way to get loader data with TanStack Router
+  const entity = useLoaderData({ from: Route.id });
+  
+  // Debug information
   console.log("Entity data:", entity);
-
+  
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded-lg">
       <h1 className="text-2xl font-bold mb-4">Деталі сутності</h1>
@@ -24,4 +25,3 @@ export default function EntityDetails(): JSX.Element {
     </div>
   );
 }
-
