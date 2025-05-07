@@ -14,21 +14,16 @@ export default function EntityCreate(): JSX.Element {
       return;
     }
     try {
-      const createdAt = new Date().toISOString(); // Оголошуємо createdAt
-      const updatedAt = createdAt; // updatedAt дорівнює createdAt при створенні
-  
-      createEntity({
-        id: Date.now(),
-        name,
-        description,
-        createdAt,
-        updatedAt,
+      await createEntity({
+        title: name,
+        content: description,
       });
       await navigate({ to: "/entities" });
     } catch (error) {
       console.error("Error creating entity:", error);
     }
   };
+  
 
   return (
     <div style={{ padding: "20px", maxWidth: "500px", margin: "0 auto" }}>
