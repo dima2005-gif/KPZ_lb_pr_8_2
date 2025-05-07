@@ -83,3 +83,4 @@ export default function EntityCreate(): JSX.Element {
     </div>
   );
 }
+
