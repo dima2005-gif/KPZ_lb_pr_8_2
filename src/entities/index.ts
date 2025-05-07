@@ -1,34 +1,6 @@
 import type { Entity } from "../types/Entity";
 import api from "../api";
 
-let entities: Array<Entity> = [
-  { 
-    id: 1, 
-    title: 'Jotaro Kujo', 
-    content: 'Stand: Star Platinum. Один з найпотужніших Stand\'ів, який володіє величезною силою та швидкістю. Може зупиняти час, має високу точність та силу в бою.'
-  },
-  { 
-    id: 2, 
-    title: 'Joseph Joestar', 
-    content: 'Stand: Hermit Purple. Використовує лозини для захоплення об\'єктів та отримання передбачень через карти Таро. Відзначається високою маневреністю та унікальними здібностями.'
-  },
-  { 
-    id: 3, 
-    title: 'Muhammad Avdol', 
-    content: 'Stand: Magician\'s Red. Вогонь! Цей Stand дозволяє керувати вогнем та створювати полум\'я для атаки, що робить Авдола потужним і небезпечним супротивником у бою.'
-  },
-  { 
-    id: 4, 
-    title: 'Jean Pierre Polnareff', 
-    content: 'Stand: Silver Chariot. Stand у вигляді лицаря з мечем, що володіє блискавичними атаками та високою швидкістю. Полнареф використовує його для швидкої та точної боротьби.'
-  },
-  { 
-    id: 5, 
-    title: 'Kakyoin Noriaki', 
-    content: 'Stand: Hierophant Green. Керує довгими кінцівками для атак на відстані та високої точності. Мощний в обороні та атаці на дальні дистанції.', 
-  }
-];
-
 interface ApiResponse<T> {
   data: T;
   message: string;
