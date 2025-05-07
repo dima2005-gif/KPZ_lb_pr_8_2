@@ -43,4 +43,13 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/dima2005-gif/kpz_lb_pr_8_2:latest
+      - uses: azure/login@v2
+        with:
+           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+         app-name: myapp-lb9
+         images: ghcr.io/${{ github.repository_owner }}/${{github.event.repository.name }}:latest
+           
 
