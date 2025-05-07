@@ -2,14 +2,14 @@ import axios from 'axios';
 
 // Створення окремого інстансу Axios
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: import.meta.env['VITE_API_BASE_URL'],
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
 // Якщо токен доступний у змінній середовища -- додаємо в Authorization
-const token = import.meta.env.VITE_API_AUTH_TOKEN;
+const token = import.meta.env.['VITE_API_AUTH_TOKEN'];
 if (token) {
   api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
