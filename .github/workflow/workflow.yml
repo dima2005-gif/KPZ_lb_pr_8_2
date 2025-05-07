@@ -38,4 +38,3 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}:latest
-
